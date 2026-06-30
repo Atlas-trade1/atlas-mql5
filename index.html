@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas MQL5 Code</title>
+    <style>
+        body {
+            background: #1e1e1e;
+            color: #D4D4D4;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding: 15px;
+            margin: 0;
+        }
+        h1 {
+            color: #4EC9B0;
+            font-size: 20px;
+        }
+      .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 12px;
+            border: 1px solid #404040;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+        }
+      .code-container {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 0 0 8px 8px;
+            padding: 12px;
+            overflow-x: auto;
+            position: relative;
+        }
+        pre { margin: 0; white-space: pre-wrap; }
+        code { color: #D4D4D4; }
+        p { color: #9CDCFE; }
+        button {
+            background: #0E639C;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        button:active { background: #1177BB; }
+    </style>
+</head>
+<body>
+    <h1>CPropEvaluator::StartNewChallenge</h1>
+    <p>Prop Firm Challenge Tracker - Built by Atlas</p>
+
+    <div class="code-header">
+        <span>MQL5</span>
+        <button onclick="copyCode()">Copy Code</button>
+    </div>
+    <div class="code-container">
+        <pre><code id="mql-code">//+------------------------------------------------------------------+
+//| Starts a new simulated challenge attempt and normalizes balances |
+//+------------------------------------------------------------------+
+void CPropEvaluator::StartNewChallenge(datetime now, double currentBal)
+  {
+   int size = ::ArraySize(m_challenges);
+   ::ArrayResize(m_challenges, size + 1, 100);
+
+   m_totalSimulated++;
+
+   MqlDateTime dt;
+   ::TimeToStruct(now, dt);
+   int currentDay = dt.year * 10000 + dt.mon * 100 + dt.day;
+
+   m_challenges[size].id = m_totalSimulated;
+   m_challenges[size].startTime = now;
+   m_challenges[size].endTime = 0;
+   m_challenges[size].startRealBalance = currentBal > 0? currentBal : 1.0;
+   m_challenges[size].status = STATUS_ACTIVE;
+   m_challenges[size].failReason = REASON_NONE;
+   m_challenges[size].incompleteReason = INCOMPLETE_NONE;
+   m_challenges[size].tradingDays = 0;
+   m_challenges[size].lastTradingDay = 0;
+   m_challenges[size].dailyStartValue = m_initialBalance;
+   m_challenges[size].lastProcessedDay = currentDay;
+   m_challenges[size].maxEquity = m_initialBalance;
+   m_challenges[size].minEquity = m_initialBalance;
+   m_challenges[size].finalBalance = m_initialBalance;
+   m_challenges[size].finalEquity = m_initialBalance;
+   m_challenges[size].isTargetReached = false;
+  }</code></pre>
+    </div>
+
+<script>
+function copyCode() {
+    const code = document.getElementById('mql-code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+        alert('Code copied! Paste in MetaEditor');
+    });
+}
+</script>
+</body>
+</html>
